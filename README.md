@@ -105,11 +105,17 @@ You can be as flexible as you need to be. For inspiration, check the examples.d 
 
 ## Debugging
 
-If you add ?debug to the URL, the server will return the file with a MIME type of text/plain instead of application/x-ns-proxy-autoconfig - this means your browser will display the file instead of trying to download it.
+If you add ?debug to the URL, the server will return the file with a MIME type of text/plain instead of application/x-ns-proxy-autoconfig - this means your browser will display the file instead of trying to download it. E.g. <http://site.wpad.example.com/wpad.dat?debug>
 
 This also bypasses the cache.
 
-## Server configuration
+## Configuration
+
+### wpad.dat
+
+1. Edit the file 08.CONFIG.txt in the custom.d folder to specify your proxy port and domain name.
+2. Add other files in custom.d as global customisations.
+3. Create sitename.d folders and put files in here to have them apply only to that specific site.
 
 ### DFS
 
