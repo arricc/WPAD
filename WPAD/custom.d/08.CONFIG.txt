@@ -1,0 +1,14 @@
+
+  // Port all proxies must use
+  var proxy_port = 8080;
+
+  //base domain name
+  var corp_domain = "example.com"; 
+  
+  //subdomain of above used for proxy server DNS
+  var proxy_subdomain = "proxy";
+
+  //Uncomment this if you want to create rules based on the target IP address
+  //Try not to use this to keep DNS queries at clients to a minimum
+  //var resolved_ip = dnsResolve(host);
+

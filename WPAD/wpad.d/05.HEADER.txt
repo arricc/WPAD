@@ -1,0 +1,11 @@
+/*
+ wpad.dat file for: %SITE%
+                  : %IPBLOCK%.0/24
+ Webserver        : %WEBSERVER%
+ Time served      : %SERVED%
+ Time generated   : %GENERATED%
+*/
+
+
+function FindProxyForURL(url, host)
+{

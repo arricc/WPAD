@@ -1,0 +1,5 @@
+
+// rtn is the returned proxy.
+// set the initial value
+
+  var rtn=my_proxy;

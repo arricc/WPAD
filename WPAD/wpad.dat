@@ -1,0 +1,74 @@
+<%
+'==========================================================================
+'
+' NAME: wpad.dat 
+'
+' AUTHOR: Mark McRitchie
+' DATE  : 11/06/2015
+'
+' COMMENT: Bootstrap the wpad.ps1 powershell script.
+'          It used to be all ASP, but was simplified significantly in PS
+'          Unfortunately I couldn't find a nice way to get IIS to call PS 
+'           directly and expose the Application object
+'
+'==========================================================================
+
+Dim DEBUGMODE
+DEBUGMODE = False
+
+'On Error Resume Next
+
+'check for a debug parameter on the calling url eg http://default.proxy.example.com/wpad.dat?debug 
+If Request.QueryString("debug").count > 0 Then
+	DEBUGMODE = True
+End If	
+
+IPADDR = Request.ServerVariables("REMOTE_ADDR")
+
+' **** Assume generic /24 IP blocks
+' **** Potential issue if your AD sites are smaller than /24 subnets!
+' **** You can probably handly in the output function however.
+IPBLOCK = Left(IPADDR,InStrRev(IPADDR,".")-1)
+
+
+Application.Lock	'Lock the application object
+
+If DateDiff("h", Application("WpadDateCached-" & IPBLOCK), Now()) > 1 Or DEBUGMODE then
+    
+	MyDir = Server.MapPath(".")
+    
+	Dim Wss, Cmd, Return, Output
+	strCmd = "powershell.exe -ExecutionPolicy Bypass -File " &  MyDir & "\wpad.ps1 -ClientIP " & IPADDR & " -ScriptDir " & MyDir
+
+	Set Wss = CreateObject("WScript.Shell")
+	Set Cmd = Wss.Exec("cmd.exe")
+	Cmd.StdIn.WriteLine strCmd & " 2>&1"
+	Cmd.StdIn.Close
+	While InStr(Cmd.StdOut.ReadLine, ">" & strCmd) = 0 : Wend
+	Do : Output = Cmd.StdOut.ReadLine
+		If Cmd.StdOut.AtEndOfStream Then Exit Do _
+		Else Return = Return & Output & vbLf
+	Loop
+
+	Return = Replace(Return,"%IPBLOCK%",IPBLOCK)
+
+    Application("Wpad-" & IPBLOCK) = Return
+    Application("WpadDateCached-" & IPBLOCK) = Now()
+    Set WshShell = Nothing
+End If
+
+Application.Unlock
+
+content = Application("Wpad-" & IPBLOCK)
+content = Replace(content,"%SERVED%",FormatDateTime(Now(),0))
+
+If DEBUGMODE Then
+    'Browser will display directly
+	response.ContentType="text/plain"
+Else
+    'Browser will download
+	response.ContentType="application/x-ns-proxy-autoconfig"
+End If
+Response.write content
+
+%>

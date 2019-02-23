@@ -1,0 +1,11 @@
+  //this allows you to set a site to go direct based on resolving <site>.proxy.example.com to 127.0.0.1
+
+  if (my_proxy != proxy_no)
+  {
+      proxy_ip  = dnsResolve("%SITE%." + proxy_domain) ;
+  
+      if (proxy_ip == "127.0.0.1")
+      {
+        my_proxy = proxy_no;
+      }
+  }  

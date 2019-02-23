@@ -1,0 +1,6 @@
+/* Send requests for these corporate websites should go out to the Internet. */
+if (
+	host == ("www." + corp_domain)     ||
+	host == ("webmail. " + corp_domain) 
+) rtn=my_proxy; 
+

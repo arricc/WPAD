@@ -1,0 +1,7 @@
+  
+  //And finally, return the determined proxy server setting from the findproxyforurl function!
+  
+  return rtn;
+
+}
+

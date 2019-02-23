@@ -1,0 +1,7 @@
+<SCRIPT LANGUAGE=VBScript RUNAT=Server>
+Sub Application_OnStart
+  'Initialize the DateCached application variable to
+  'one day prior to the current date/time
+  Application("WpadDateCached") = DateAdd("d", -1, Now())
+End Sub
+</SCRIPT>

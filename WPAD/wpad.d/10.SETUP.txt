@@ -1,0 +1,30 @@
+
+  var proxy_domain = proxy_subdomain + "." + corp_domain;
+  var proxy_base = proxy_domain + ":" + proxy_port;
+
+  //Uncomment this if you want to create rules based on the target IP address
+  //Try not to use this to keep DNS queries at clients to a minimum
+  //var resolved_ip = dnsResolve(host);
+
+  var proxy_no      = "DIRECT";
+
+  var proxy_default   = "PROXY default." + proxy_base;
+
+  var proxy_one      = "PROXY one." + proxy_base;
+  var proxy_two      = "PROXY one." + proxy_base;
+
+  var proxy_%SITEL%  = "PROXY %SITE%." + proxy_base;
+
+  //This is a fallthrough safety net, incase the requesting client site can't be identified, or isn't configured in AD Sites & Services
+  var proxy_         = proxy_default;
+
+  /*
+     DEFAULT PROXY TO USE FOR PROXY-ABLE DESTINATIONS
+     OVERIDE IN PER-LOCATION FILES
+  */
+
+  var my_proxy = proxy_%SITEL% ;
+
+
+
+

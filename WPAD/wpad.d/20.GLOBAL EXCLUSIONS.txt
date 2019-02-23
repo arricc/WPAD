@@ -1,0 +1,44 @@
+  /*
+    Go direct to all private IP ranges (and all public ranges we're using internally)
+    Note, this only applies if the client is accessing based on IP address http://10.1.2.3
+  */
+  
+  if (
+          shExpMatch(host, "10.*") 		||
+          shExpMatch(host, "172.*") 		||
+          shExpMatch(host, "192.168.*") 
+  ) rtn=proxy_no;
+
+  //TODO: Need to double check this next logic
+  if (resolved_ip) {
+    if (
+      isInNet(resolved_ip, "10.0.0.0", "255.0.0.0") ||
+      isInNet(resolved_ip, "172.16.0.0",  "255.240.0.0") ||
+      isInNet(resolved_ip, "192.168.0.0", "255.255.0.0") ||
+      isInNet(resolved_ip, "127.0.0.0", "255.255.255.0"))
+    rtn=proxy_no; 
+  }
+
+  /*
+    Go direct to this public ranges someone stupidly used interally years ago
+  */
+  //if (
+  //        shExpMatch(host, "192.111.*")
+  //) rtn=proxy_no;
+
+  /* do not proxy bare hostnames 
+     E.g. http://host instead of http://host.domain.com 
+  */
+  if (isPlainHostName(host)) rtn=proxy_no;
+
+
+  /*
+     do not proxy these domains as are they are used internally - exceptions to this are covered later in "GLOBAL PROXY SITES.txt"
+     needed explicitly as the above shExpMatch only matches if the IP is in the address.. and is overly broad for the 172 addresses but meh.
+  */
+  
+  if (
+    dnsDomainIs(host, "." + corp_domain) ||
+   	dnsDomainIs(host, ".local")
+  ) rtn=proxy_no;
+  

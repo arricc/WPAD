@@ -1,0 +1,48 @@
+/*
+ *  Some examples of what you could do per site!
+ *  JavaScript conditionals:
+ *    OR ||
+ *    AND &&
+ *
+ *  Watch when adding an extra line to a conditional list - if you copy an existing
+ *   line, you don't keep a trailling || - this is a big cause of breaking the JavaScript!
+ *
+ */
+
+
+/* Site with firewall restrictions for source IP addresses */
+if (
+	host == "www.restricted.source.address.com"	     
+) rtn=proxy_one; 
+
+
+
+
+/* sites you are allowing direct access to via the firewall */
+if (
+	host == "1.2.3.4"               ||
+	host == "my.dev.site.net"       ||
+	dnsDomainIs(host, ".weird.org") 
+) rtn=proxy_default; 
+
+
+
+//Odd site 
+if (
+    dnsDomainIs(host, ".georestricted.com")
+) rtn=proxy_two ; 
+  
+
+//Backhaul traffic from VPN clients to certain hosts instead of letting them go direct
+if (
+	(
+		dnsDomainIs(host, ".doesnt.com") ||
+		dnsDomainIs(host, ".work.com")
+	) 
+	&& //AND
+	(
+		isInNet(myIpAddress(), "192.168.80.0", "255.255.255.0") ||
+		isInNet(myIpAddress(), "192.168.90.0", "255.255.255.0") 
+	)
+) rtn=proxy_default; 
+ 
